@@ -1,6 +1,6 @@
 meta = {
     name = 'Spelunker Trials Vol. 2',
-    version = '1.1.1',
+    version = '2.0',
     description = 'More levels. More kaizo. More pain.',
     author = 'JawnGC',
 }
@@ -8,9 +8,15 @@ meta = {
 register_option_int("level_selected", "Level number for shortcut door (1 to 28)", 1, 1, 28)
 
 local level_sequence = require("LevelSequence/level_sequence")
+local telescopes = require("Telescopes/telescopes")
 local DIFFICULTY = require('difficulty')
 local SIGN_TYPE = level_sequence.SIGN_TYPE
 local save_state = require('save_state')
+local horizontal_forcefields = require('horizontal_forcefields')
+local olmec_pillars = require('olmec_pillars')
+local blockchain_and_firebug = require("blockchain_and_firebug")
+local on_off_switch = require("on_off_switch")
+local pistons = require("pistons")
 
 local update_continue_door_enabledness
 local force_save
@@ -67,44 +73,7 @@ levels = {dwelling1, dwelling2, dwelling3, dwelling4, volcana1, volcana2, volcan
 level_sequence.set_levels(levels)
 
 --Do not spawn Ghost
-set_ghost_spawn_times(-1, -1)
-
---ON/OFF Switches
-switch_hit = false
-off = true
-
-define_tile_code("on_off_switch")
-switches = {}
-set_pre_tile_code_callback(function(x, y, layer)
-	local block_id = spawn(ENT_TYPE.ITEM_SLIDINGWALL_SWITCH, x, y, layer, 0, 0)
-	switches[#switches + 1] = get_entity(block_id)
-	switches[#switches].color:set_rgba(0, 100, 255, 255) --Light Blue
-	return true
-end, "on_off_switch")
-	
---ON/OFF Blocks
-define_tile_code("blue_on_off_block")
-blue_blocks = {}
-set_pre_tile_code_callback(function(x, y, layer)
-	local block_id = spawn(ENT_TYPE.ACTIVEFLOOR_PUSHBLOCK, x, y, layer, 0, 0)
-	blue_blocks[#blue_blocks + 1] = get_entity(block_id)
-	blue_blocks[#blue_blocks].color:set_rgba(0, 100, 255, 255) --Light Blue
-	blue_blocks[#blue_blocks].more_flags = set_flag(blue_blocks[#blue_blocks].more_flags, 17) --Unpushable
-	blue_blocks[#blue_blocks].flags = set_flag(blue_blocks[#blue_blocks].flags, 10) --No Gravity
-	return true
-end, "blue_on_off_block")
-
-define_tile_code("red_on_off_block")
-red_blocks = {}
-set_pre_tile_code_callback(function(x, y, layer)
-	local block_id = spawn(ENT_TYPE.ACTIVEFLOOR_PUSHBLOCK, x, y, layer, 0, 0)
-	red_blocks[#red_blocks + 1] = get_entity(block_id)
-	red_blocks[#red_blocks].color:set_rgba(255, 40, 0, 150) --Red, Transparent
-	red_blocks[#red_blocks].more_flags = set_flag(red_blocks[#red_blocks].more_flags, 17) --Unpushable
-	red_blocks[#red_blocks].flags = set_flag(red_blocks[#red_blocks].flags, 10) --No Gravity
-	red_blocks[#red_blocks].flags = clr_flag(red_blocks[#red_blocks].flags, 3) --No Collision
-	return true
-end, "red_on_off_block")
+set_time_ghost_enabled(false)
 
 local create_stats = require('stats')
 local function create_saved_run()
@@ -161,6 +130,17 @@ local function shortcut_callback()
 		return true
 	end, "volcana_shortcut")
 end
+
+define_tile_code("large_pushblock")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ACTIVEFLOOR_PUSHBLOCK, x+0.5, y, layer, 0, 0)
+	local block = get_entity(block_id)
+	block.hitboxx = block.hitboxx * 2
+	block.hitboxy = block.hitboxy * 2
+	block.width = block.width * 2
+	block.height = block.height * 2
+	return true
+end, "large_pushblock")
 
 level_sequence.set_on_win(function(attempts, total_time)
 	local frames = total_time

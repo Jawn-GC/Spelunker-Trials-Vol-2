@@ -2,6 +2,8 @@ local dwelling1 = {
     identifier = "Dwelling-1",
     title = "Dwelling-1: Overgrown",
     theme = THEME.DWELLING,
+	world = 1,
+	level = 1,
     width = 4,
     height = 4,
     file_name = "Dwelling-1.lvl",
@@ -18,7 +20,23 @@ dwelling1.load_level = function()
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
 		entity:destroy()
-	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_SKULL)
+	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_PICKUP_SKELETON_KEY)
+	
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SKELETON)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_SKULL)
+	
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_BONES)
+	
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.DECORATION_HANGING_HIDE)
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
 		--Allow Snake to stand on thorns
@@ -40,17 +58,9 @@ dwelling1.load_level = function()
 		entity.flags = set_flag(entity.flags, 6)
     end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOORSTYLED_MINEWOOD)
 	
-	local pushblocks = {}
-	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
-		--Unpushable Blocks
-		pushblocks[#pushblocks+1] = entity
-		entity.more_flags = set_flag(entity.more_flags, 17)
-    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ACTIVEFLOOR_PUSHBLOCK)
-	
-	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()
-        for i = 1,#pushblocks do
-			pushblocks[i].more_flags = set_flag(pushblocks[i].more_flags, 17)
-		end
+	local frames = 0
+	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()	
+		frames = frames + 1
     end, ON.FRAME)
 	
 	toast(dwelling1.title)

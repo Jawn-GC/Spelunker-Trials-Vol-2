@@ -555,7 +555,7 @@ end
 -- Since we are keeping track of time for the entire run even through deaths and resets, we must track
 -- what the time was on resets and level transitions.
 local function save_time_on_reset_callback()
-    if state.theme == THEME.BASE_CAMP or not run_state.run_started then return end
+    if state.screen ~= SCREEN.LEVEL or not run_state.run_started then return end
     if sequence_state.keep_progress then
         -- Save the time on reset so we can keep the timer going.
         run_state.total_time = state.time_total
@@ -568,20 +568,20 @@ end
 -- Save the time of the run on transitions so that the run state is correct on starting
 -- the next level.
 local function save_time_on_transition_callback()
-    if state.theme == THEME.BASE_CAMP or not run_state.run_started then return end
+    if state.screen_last ~= SCREEN.LEVEL or not run_state.run_started then return end
     run_state.total_time = state.time_total
 end
 
 -- Set the time in the state so it shows up in the player's HUD.
 local function load_time_after_level_generation_callback()
-    if state.theme == THEME.BASE_CAMP then return end
+    if state.screen ~= SCREEN.LEVEL then return end
     state.time_total = run_state.total_time
 end
 
 -- Increase the attempts on level start, and mark the run as started on the first level start so
 -- we can begin keeping track of the time.
 local function start_level_callback()
-    if state.theme == THEME.BASE_CAMP then return end
+    if state.screen ~= SCREEN.LEVEL then return end
     run_state.run_started = true
     run_state.attempts = run_state.attempts + 1
     if sequence_callbacks.on_level_start then

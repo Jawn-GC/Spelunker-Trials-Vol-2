@@ -18,11 +18,19 @@ volcana4.load_level = function()
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
 		entity:destroy()
-	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_SKULL)
+	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_PICKUP_SKELETON_KEY)
 	
-	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity)
-		entity.flags = clr_flag(entity.flags, 18)
-	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_WOODEN_ARROW)
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SKELETON)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_SKULL)
+	
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_BONES)
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity)
 		entity:destroy()
@@ -51,20 +59,6 @@ volcana4.load_level = function()
             move_entity(entity.uid, 1000, 0, 0, 0)
         end
     end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_FIREBUG)
-	
-	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
-        -- Remove Rockdog (taken from previous level)
-        local x, y, layer = get_position(entity.uid)
-        local dog = get_entities_at(0, MASK.ANY, x, y, layer, 1)
-        if #dog > 0 then
-            entity.flags = set_flag(entity.flags, ENT_FLAG.INVISIBLE)
-            entity:destroy()
-        end
-    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MOUNT_ROCKDOG)
-	
-	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
-		entity:destroy()
-	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_SKULL)
 	
 	local frames = 0
 	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()
