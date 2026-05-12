@@ -1,9 +1,11 @@
 local volcana2 = {
     identifier = "Volcana-2",
-    title = "Volcana-2: Orbit",
+    title = "Volcana-2: Deflection",
     theme = THEME.VOLCANA,
+	world = 2,
+	level = 2,
     width = 3,
-    height = 3,
+    height = 6,
     file_name = "Volcana-2.lvl",
 }
 
@@ -15,6 +17,8 @@ local level_state = {
 volcana2.load_level = function()
     if level_state.loaded then return end
     level_state.loaded = true
+	
+	replace_drop(DROP.ROBOT_METALSHIELD, ENT_TYPE.ITEM_BLOOD)
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
 		entity:destroy()
@@ -56,11 +60,19 @@ volcana2.load_level = function()
 
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
 		entity.flags = set_flag(entity.flags, 6)
-    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOORSTYLED_VLAD)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOORSTYLED_BABYLON)
 
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
 		entity.flags = set_flag(entity.flags, 6)
     end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_THORN_VINE)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
+		entity.flags = set_flag(entity.flags, 6)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_CONVEYORBELT_LEFT)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
+		entity.flags = set_flag(entity.flags, 6)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_CONVEYORBELT_RIGHT)
 
 	local frames = 0
 	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()
@@ -72,7 +84,9 @@ end
 
 volcana2.unload_level = function()
     if not level_state.loaded then return end
-    
+   
+	replace_drop(DROP.ROBOT_METALSHIELD, ENT_TYPE.ITEM_METAL_SHIELD)
+   
     local callbacks_to_clear = level_state.callbacks
     level_state.loaded = false
     level_state.callbacks = {}

@@ -2,6 +2,8 @@ local jungle1 = {
     identifier = "Jungle-1",
     title = "Jungle-1: 1001 Thorns",
     theme = THEME.JUNGLE,
+	world = 3,
+	level = 1,
     width = 4,
     height = 4,
     file_name = "Jungle-1.lvl",
@@ -57,23 +59,6 @@ jungle1.load_level = function()
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
 		entity:give_powerup(ENT_TYPE.ITEM_POWERUP_SPIKE_SHOES)
     end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SNAKE)
-	
-	define_tile_code("floating_firebug")
-	level_state.callbacks[#level_state.callbacks+1] = set_pre_tile_code_callback(function(x, y, layer)
-		local bug_id = spawn(ENT_TYPE.MONS_FIREBUG_UNCHAINED, x, y, layer, 0, 0)
-		local bug = get_entity(bug_id)
-		bug.flags = set_flag(bug.flags, ENT_FLAG.FACING_LEFT)
-		bug.user_data = {x = x, y = y}
-		
-		if bug ~= nil then
-			bug:set_post_update_state_machine(function(self)
-				bug.x = bug.user_data.x
-				bug.y = bug.user_data.y
-			end)
-		end
-		
-		return true
-	end, "floating_firebug")
 	
 	local frames = 0
 	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()

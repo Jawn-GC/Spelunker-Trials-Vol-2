@@ -142,6 +142,35 @@ set_pre_tile_code_callback(function(x, y, layer)
 	return true
 end, "large_pushblock")
 
+define_tile_code("floating_firebug")
+set_pre_tile_code_callback(function(x, y, layer)
+	local bug_id = spawn(ENT_TYPE.MONS_FIREBUG_UNCHAINED, x, y, layer, 0, 0)
+	local bug = get_entity(bug_id)
+	bug.flags = set_flag(bug.flags, ENT_FLAG.FACING_LEFT)
+	bug.user_data = {x = x, y = y}
+	
+	if bug ~= nil then
+		bug:set_post_update_state_machine(function(self)
+			bug.x = bug.user_data.x
+			bug.y = bug.user_data.y
+		end)
+	end
+	
+	return true
+end, "floating_firebug")
+
+define_tile_code("mitt")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_PICKUP_PITCHERSMITT, x, y, layer, 0, 0)		
+	return true
+end, "mitt")
+
+define_tile_code("climbers")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_PICKUP_CLIMBINGGLOVES, x, y, layer, 0, 0)		
+	return true
+end, "climbers")
+
 level_sequence.set_on_win(function(attempts, total_time)
 	local frames = total_time
 	local hours = 0
