@@ -165,11 +165,35 @@ set_pre_tile_code_callback(function(x, y, layer)
 	return true
 end, "mitt")
 
+define_tile_code("pp")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_POWERPACK, x, y, layer, 0, 0)
+	return true
+end, "pp")
+
 define_tile_code("climbers")
 set_pre_tile_code_callback(function(x, y, layer)
 	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_PICKUP_CLIMBINGGLOVES, x, y, layer, 0, 0)		
 	return true
 end, "climbers")
+
+define_tile_code("wooden_arrow")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_WOODEN_ARROW, x, y, layer, 0, 0)
+	return true
+end, "wooden_arrow")
+
+define_tile_code("xbow")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_CROSSBOW, x, y, layer, 0, 0)
+	return true
+end, "xbow")
+
+define_tile_code("springs")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_PICKUP_SPRINGSHOES, x, y, layer, 0, 0)	
+	return true
+end, "springs")
 
 level_sequence.set_on_win(function(attempts, total_time)
 	local frames = total_time
@@ -206,6 +230,20 @@ set_callback(function()
 		state.level_flags = clr_flag(state.level_flags, 18)
 	end	
 end, ON.POST_ROOM_GENERATION)
+
+set_post_entity_spawn(function(entity) 
+	entity.flags = clr_flag(entity.flags, 22) 
+end, SPAWN_TYPE.ANY, MASK.ITEM, nil)
+
+set_callback(function()
+    if state.loading == 1 and state.screen_next == SCREEN.TRANSITION then
+        for _, p in ipairs(players) do
+            for _, v in ipairs(p:get_powerups()) do
+                p:remove_powerup(v)
+            end
+        end
+    end
+end, ON.LOADING)
 
 --Remove resources from the player and set health to 1
 --Remove held item from the player
