@@ -1,7 +1,7 @@
 meta = {
     name = 'Spelunker Trials Vol. 2',
     version = '2.0',
-    description = 'More levels. More kaizo. More pain.',
+    description = 'The second entry in the Spelunker Trials series',
     author = 'JawnGC',
 }
 
