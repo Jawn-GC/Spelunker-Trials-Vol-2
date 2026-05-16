@@ -39,7 +39,6 @@ jungle2.load_level = function()
 	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_METAL_ARROW)
 
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
-		--Indestructible thorn vine
 		entity.flags = set_flag(entity.flags, 6)
     end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_THORN_VINE)
 

@@ -195,6 +195,12 @@ set_pre_tile_code_callback(function(x, y, layer)
 	return true
 end, "springs")
 
+define_tile_code("shot_gun")
+set_pre_tile_code_callback(function(x, y, layer)
+	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_SHOTGUN, x, y, layer, 0, 0)
+	return true
+end, "shot_gun")
+
 level_sequence.set_on_win(function(attempts, total_time)
 	local frames = total_time
 	local hours = 0
