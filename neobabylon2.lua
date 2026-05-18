@@ -21,7 +21,6 @@ neobabylon2.load_level = function()
 	activate_sparktraps_hack(true);
 
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(ent)
-
 		ent.speed = 0.08
 		ent.distance = 1.1
 		ent.rotation_angle = math.pi
