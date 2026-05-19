@@ -2,6 +2,8 @@ local sunkencity1 = {
     identifier = "Sunken City-1",
     title = "Sunken City-1: Bittersweet",
     theme = THEME.SUNKEN_CITY,
+	world = 7,
+	level = 1,
     width = 4,
     height = 4,
     file_name = "Sunken City-1.lvl",
@@ -15,40 +17,41 @@ local level_state = {
 sunkencity1.load_level = function()
     if level_state.loaded then return end
     level_state.loaded = true
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
+		entity.flags = set_flag(entity.flags, 6)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOORSTYLED_SUNKEN)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
+		entity.flags = set_flag(entity.flags, 6)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_GENERIC)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_PICKUP_SKELETON_KEY)
 	
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
 		entity:destroy()
-	end, SPAWN_TYPE.SYSTEMIC, 0, ENT_TYPE.ITEM_SKULL)
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SKELETON)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_SKULL)
 	
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
+		entity:destroy()
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.ITEM_BONES)
+
 	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function (entity)
-		--Allow Snakes to stand on thorns
+		entity.flags = set_flag(entity.flags, 6)
+    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.FLOOR_THORN_VINE)
+
+	level_state.callbacks[#level_state.callbacks+1] = set_post_entity_spawn(function(entity, spawn_flags)
 		entity:give_powerup(ENT_TYPE.ITEM_POWERUP_SPIKE_SHOES)
-    end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SNAKE)
-	
-	--Floating Firebug
-	define_tile_code("floating_firebug")
-	local floating_firebug
-	local firebug_x
-	local firebug_y
-	level_state.callbacks[#level_state.callbacks+1] = set_pre_tile_code_callback(function(x, y, layer)
-		local block_id = spawn(ENT_TYPE.MONS_FIREBUG_UNCHAINED, x, y, layer, 0, 0)
-		floating_firebug = get_entity(block_id)
-		firebug_x = x
-		firebug_y = y
-		floating_firebug.flags = set_flag(floating_firebug.flags, 10)
-		floating_firebug.flags = set_flag(floating_firebug.flags, 17)
-		floating_firebug.health = 2
-		return true
-	end, "floating_firebug")
-	
+	end, SPAWN_TYPE.ANY, 0, ENT_TYPE.MONS_SNAKE)
+
 	local frames = 0
 	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()
-	
-		if floating_firebug.flags == 1074878016 then
-			floating_firebug.x = firebug_x + math.sin(0.05 * frames)
-			floating_firebug.y = firebug_y
-		end
-	
         frames = frames + 1
     end, ON.FRAME)
 	
