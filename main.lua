@@ -159,6 +159,12 @@ set_pre_tile_code_callback(function(x, y, layer)
 	return true
 end, "floating_firebug")
 
+define_tile_code("gold_bug")
+set_pre_tile_code_callback(function(x, y, layer)
+	local bug = spawn(ENT_TYPE.MONS_SCARAB, x, y, layer, 0, 0)
+	return true
+end, "gold_bug")
+
 define_tile_code("mitt")
 set_pre_tile_code_callback(function(x, y, layer)
 	local block_id = spawn_entity_snapped_to_floor(ENT_TYPE.ITEM_PICKUP_PITCHERSMITT, x, y, layer, 0, 0)		
@@ -395,7 +401,7 @@ set_callback(function()
 		health = health + players[i].health
 	end
 
-	if health == 0 and level_sequence.get_run_state().current_level.identifier ~= "Ending" then
+	if health == 0 then
 		state.quest_flags = set_flag(state.quest_flags, 1)
 		warp(state.world_start, state.level_start, state.theme_start)
 	end

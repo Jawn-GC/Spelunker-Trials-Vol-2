@@ -2,7 +2,9 @@ local ending = {
     identifier = "Ending",
     title = "Ending",
     theme = THEME.CITY_OF_GOLD,
-    width = 4,
+	world = 7,
+	level = 5,
+    width = 5,
     height = 4,
     file_name = "CoG.lvl",
 }
@@ -15,13 +17,6 @@ local level_state = {
 ending.load_level = function()
     if level_state.loaded then return end
     level_state.loaded = true
-	
-	level_state.callbacks[#level_state.callbacks+1] = set_callback(function ()
-		if players[1].health == 0 and entity_has_item_type(players[1].uid, ENT_TYPE.ITEM_POWERUP_ANKH) == true then			
-			spawn(ENT_TYPE.ITEM_BOMB, 25, 95, 0, 0, 0)
-			spawn(ENT_TYPE.ITEM_BOMB, 23, 95, 0, 0, 0)		
-		end
-    end, ON.FRAME)
 	
 	toast("Congratulations!")
 end
